@@ -16,7 +16,7 @@ import java.util.Calendar;
  * @version 1.0.1
  */
 public final class IntroductiveExample extends AbstractProblem {
-    IntVar[] m_allVars = new IntVar[5];
+    private IntVar[] m_allVars = null;
 
     @Override
     public void createSolver() {
