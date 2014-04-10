@@ -13,7 +13,7 @@ import java.util.Calendar;
  * Introductive example.
  *
  * @author Anthony GELIBERT
- * @version 0.0.1
+ * @version 1.0.1
  */
 public final class IntroductiveExample extends AbstractProblem {
     IntVar[] all = new IntVar[5];
