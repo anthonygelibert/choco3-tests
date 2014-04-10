@@ -43,15 +43,15 @@ import java.util.Arrays;
 
 /**
  * CSPLib prob019:<br/>
- * "An order n magic square is a n by n matrix containing the numbers 1 to n^2, with each row,
- * column and main diagonal equal the same sum.
- * As well as finding magic squares, we are interested in the number of a given size that exist."
- * <br/>
+ * "An order n magic square is a n by n matrix containing the numbers 1 to n^2,
+ * with each row, column and main diagonal equal the same sum.
+ * As well as finding magic squares, we are interested in the number of a given
+ * size that exist."
  *
  * @author Charles Prud'homme
  * @since 31/03/11
  */
-public class MagicSquare extends AbstractProblem {
+public final class MagicSquare extends AbstractProblem {
 
     @Option(name = "-n", usage = "Magic square size.", required = false)
     int n = 5;
@@ -65,33 +65,32 @@ public class MagicSquare extends AbstractProblem {
 
     @Override
     public void buildModel() {
-        int ms = n * (n * n + 1) / 2;
-
-        IntVar[][] matrix = new IntVar[n][n];
-        IntVar[][] invMatrix = new IntVar[n][n];
+        final int ms = n * (n * n + 1) / 2;
+        final IntVar[][] matrix = new IntVar[n][n];
+        final IntVar[][] invMatrix = new IntVar[n][n];
         vars = new IntVar[n * n];
 
         int k = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++, k++) {
-                matrix[i][j] = VariableFactory.enumerated("square" + i + "," + j, 1, n * n, solver);
+                matrix[i][j] = VariableFactory.enumerated(String.format("square%d,%d", i, j), 1, n * n, solver); /* NON-NLS */
                 vars[k] = matrix[i][j];
                 invMatrix[j][i] = matrix[i][j];
             }
         }
 
-        IntVar[] diag1 = new IntVar[n];
-        IntVar[] diag2 = new IntVar[n];
+        final IntVar[] diag1 = new IntVar[n];
+        final IntVar[] diag2 = new IntVar[n];
         for (int i = 0; i < n; i++) {
             diag1[i] = matrix[i][i];
-            diag2[i] = matrix[(n - 1) - i][i];
+            diag2[i] = matrix[n - 1 - i][i];
         }
 
-        solver.post(IntConstraintFactory.alldifferent(vars, "BC"));
+        solver.post(IntConstraintFactory.alldifferent(vars, "BC")); /* NON-NLS */
 
-        int[] coeffs = new int[n];
+        final int[] coeffs = new int[n];
         Arrays.fill(coeffs, 1);
-        IntVar msv = VariableFactory.fixed(ms, solver);
+        final IntVar msv = VariableFactory.fixed(ms, solver);
         for (int i = 0; i < n; i++) {
             solver.post(IntConstraintFactory.scalar(matrix[i], coeffs, msv));
             solver.post(IntConstraintFactory.scalar(invMatrix[i], coeffs, msv));
@@ -118,25 +117,26 @@ public class MagicSquare extends AbstractProblem {
 
     @Override
     public void prettyOut() {
-        StringBuilder st = new StringBuilder();
-        String line = "+";
+        final StringBuilder st = new StringBuilder();
+        final StringBuilder line = new StringBuilder(2 + (5 * n));
+        line.append('+');
         for (int i = 0; i < n; i++) {
-            line += "----+";
+            line.append("----+");
         }
-        line += "\n";
+        line.append('\n');
         st.append(line);
         for (int i = 0; i < n; i++) {
-            st.append("|");
+            st.append('|');
             for (int j = 0; j < n; j++) {
-                st.append(StringUtils.pad(vars[i * n + j].getValue() + "", -3, " ")).append(" |");
+                st.append(StringUtils.pad(String.valueOf(vars[i * n + j].getValue()), -3, " ")).append(" |");
             }
             st.append(MessageFormat.format("\n{0}", line));
         }
         st.append("\n\n\n");
-        LoggerFactory.getLogger("bench").info(st.toString());
+        LoggerFactory.getLogger("bench").info(st.toString()); /* NON-NLS */
     }
 
-    public static void main(String[] args) {
+    public static void main(final String... args) {
         new MagicSquare().execute(args);
     }
 }
