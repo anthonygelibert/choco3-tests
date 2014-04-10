@@ -17,7 +17,7 @@ import java.util.Calendar;
  */
 public final class MagicSquare extends AbstractProblem {
     /** Size of the square. */
-    private static final int      SQUARE_SIZE = 5;
+    private static final int      SQUARE_SIZE = 6;
     /** All the vars. */
     private final        IntVar[] m_allVars = new IntVar[SQUARE_SIZE * SQUARE_SIZE];
 
@@ -66,7 +66,8 @@ public final class MagicSquare extends AbstractProblem {
     @Override
     public void configureSearch() {
         //solver.set(IntStrategyFactory.domOverWDeg_InDomainMin(m_allVars, 0));
-        solver.set(IntStrategyFactory.ImpactBased(m_allVars, Calendar.getInstance().getTimeInMillis()));
+        //solver.set(IntStrategyFactory.ImpactBased(m_allVars, Calendar.getInstance().getTimeInMillis()));
+        solver.set(IntStrategyFactory.ImpactBased(m_allVars, 2, 3, 10, Calendar.getInstance().getTimeInMillis(),false));
     }
 
     @Override
